@@ -1,0 +1,14 @@
+We need one (1) Stepper motor. 
+Candidates (cheapish):
+https://vallder.com/fi/product/stepper-motors-3/
+https://kauppa.sintosen.com/product/925/nema-17-pancake-stepperi-moottori-18-astetta
+
+Driver (one) for stepper motor:
+A4988 realtively cheap 4-5euros
+https://kauppa.sintosen.com/product/857/a4988-stepperi-ajuri
+
+Timing belt for the movement:
+https://kauppa.sintosen.com/product/535/hammashihna-gates-powergrip-gt2
+
+Belt wheels, might be possible to manufacture our own with 3d printer:
+https://kauppa.sintosen.com/product/585/hihnapyora-gt2-6mm-hihnalle-16t
