@@ -1,8 +1,8 @@
-from gpiozero import OutputDevice, DistanceSensor
+from gpiozero import OutputDevice, DistanceSensor, Servo
 from time import sleep
 
 # -----------------------------
-# PINNIT (Korjattu kuvasi perusteella)
+# PINNIT
 # -----------------------------
 STEP_PIN = 27
 DIR_PIN = 17
@@ -10,6 +10,8 @@ ENABLE_PIN = 22
 
 TRIGGER_PIN = 5
 ECHO_PIN = 6
+
+SERVO_PIN = 23
 
 # -----------------------------
 # LAITTEET
@@ -28,13 +30,21 @@ sensor = DistanceSensor(
     max_distance=2.0
 )
 
+# Servon asetukset kuvan mukaisesti
+my_servo = Servo(
+    SERVO_PIN, 
+    initial_value=1, 
+    min_pulse_width=0.0005, 
+    max_pulse_width=0.0024
+)
+
 # -----------------------------
 # ASETUKSET
 # -----------------------------
 FORWARD = False
 BACKWARD = True
 
-STEP_DELAY = 0.001       # Päivitetty kuvasi mukaiseksi (0.001)
+STEP_DELAY = 0.001       
 
 # Pysäytysetäisyys palautuksessa
 STOP_DISTANCE_CM = 10.0
@@ -45,7 +55,6 @@ STOP_DISTANCE_CM = 10.0
 def move_steps(amount):
     """
     Liikuttaa moottoria eteenpäin annetun määrän steppejä.
-    Täsmälleen sama askellogiikka kuin kuvassasi.
     """
     for _ in range(amount):
         step.on()
@@ -72,36 +81,73 @@ def move_until_distance(stop_distance_cm):
         step.off()
         sleep(STEP_DELAY)
 
+def operate_servo():
+    """
+    Ajaa servon liitetiedoston servo.py logiikan mukaisesti.
+    """
+    print("--- Servon ajo alkaa ---")
+    print("Suljetaan servo...")
+    my_servo.value = 0.9    # Minimiasento (kiinni)
+    sleep(1)
+    my_servo.detach()
+    print("Valmis!")
+
+    print("Avataan servo...")
+    my_servo.value = -0.06  # Maksimiasento (auki)
+    sleep(1)
+    my_servo.detach()
+    
+    print("Pidetään tauko (3 sekuntia)...")
+    sleep(3)
+    print("--- Servon ajo valmis ---")
+
 def run_motor_sequence(rounds, steps_per_round):
     """
-    Ajaa moottoria eteenpäin annettujen kierrosten ja askeleiden verran,
-    minkä jälkeen palauttaa taaksepäin sensorin antamaan rajaan asti.
+    Ajaa askelmoottoria eteenpäin, käyttää servoa ja
+    palauttaa askelmoottorin takaisin sensorin antamaan rajaan asti.
     """
     total_steps = rounds * steps_per_round
-    print(f"\n--- Aloitetaan ajo: {rounds} kierrosta, {steps_per_round} askelta/kierros (yhteensä {total_steps} askelta) ---")
+    print(f"\nAloitetaan ajo: {rounds} kierrosta, {steps_per_round} askelta/kierros (yhteensä {total_steps} askelta)")
     
-    enable.on() # Laitetaan moottori päälle
+    enable.on() # Laitetaan askelmoottori päälle
     
-    # Liike eteenpäin
+    # 1. Liike eteenpäin
     direction.value = FORWARD
     print("Liikutaan eteenpäin...")
     move_steps(total_steps)
     
-    # Liike taaksepäin (palautus)
-    print("Palautetaan taaksepäin sensorin perusteella...")
+    # 2. Servon ajo
+    operate_servo()
+    
+    # 3. Liike taaksepäin (palautus)
+    print("Palautetaan askelmoottori taaksepäin sensorin perusteella...")
     direction.value = BACKWARD
     sleep(0.1) # Pieni tauko suunnanvaihdon yhteydessä
     move_until_distance(STOP_DISTANCE_CM)
     
-    enable.off() # Moottori lepotilaan
-    print("Ajo valmis. Moottori lepotilassa.\n")
+    enable.off() # Askelmoottori lepotilaan
+    print("Koko sekvenssi valmis.\n")
 
 # -----------------------------
 # PÄÄOHJELMA
 # -----------------------------
 try:
-    print("Ohjelma käynnistetty. Paina Ctrl+C lopettaaksesi milloin tahansa.")
+    print("\n==================================")
+    print("Ohjelma käynnistyy...")
     
+    # ALKUASETUS (Homing): Ajetaan heti alkuun moottori oikeaan paikkaan
+    print("Kalibroidaan aloitusasento: Etsitään sensori < 10 cm...")
+    enable.on()
+    direction.value = BACKWARD
+    sleep(0.1)
+    move_until_distance(STOP_DISTANCE_CM)
+    enable.off()
+    print("Aloitusasento saavutettu!")
+    print("==================================\n")
+    
+    print("Paina Ctrl+C lopettaaksesi milloin tahansa.\n")
+    
+    # KÄYTTÄJÄN VALINTALUUPPI
     while True:
         print("Valitse haluamasi toiminto:")
         print("1) Rounds: 5,  Steps: 95")
@@ -129,4 +175,4 @@ except KeyboardInterrupt:
 
 finally:
     enable.off()
-    print("Turvallinen lopetus tehty (enable.off).")
+    print("Turvallinen lopetus tehty (moottorit pois päältä).")
