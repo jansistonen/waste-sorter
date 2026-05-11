@@ -2,7 +2,7 @@ import cv2
 from ultralytics import YOLO
 
 # 1. Ladataan kevyt YOLOv11-malli (n-versio on nopea videokuvalle)
-model = YOLO("best.pt")
+model = YOLO(r"C:\Users\hjerk\Desktop\Robo\waste-sorter\waste-sorter\best.pt")
 
 # 2. Avataan kamera (indeksi 0, 1 webc, 6=Intel RGB)
 cap = cv2.VideoCapture(0)
