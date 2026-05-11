@@ -2,10 +2,10 @@ from gpiozero import OutputDevice, DistanceSensor
 from time import sleep
 
 # -----------------------------
-# PINNIT
+# PINNIT (Korjattu kuvasi perusteella)
 # -----------------------------
-STEP_PIN = 17
-DIR_PIN = 27
+STEP_PIN = 27
+DIR_PIN = 17
 ENABLE_PIN = 22
 
 TRIGGER_PIN = 5
@@ -34,8 +34,7 @@ sensor = DistanceSensor(
 FORWARD = False
 BACKWARD = True
 
-STEP_DELAY = 0.003       # isompi = hitaampi moottori
-SENSOR_DELAY = 0.02      # tauko sensorin lukujen välissä
+STEP_DELAY = 0.001       # Päivitetty kuvasi mukaiseksi (0.001)
 
 # Pysäytysetäisyys palautuksessa
 STOP_DISTANCE_CM = 10.0
@@ -43,33 +42,16 @@ STOP_DISTANCE_CM = 10.0
 # -----------------------------
 # FUNKTIOT
 # -----------------------------
-def read_distance_cm():
-    """
-    Lukee sensorin etäisyyden senttimetreinä.
-    Palauttaa None, jos lukema vaikuttaa virheelliseltä.
-    """
-    distance_cm = sensor.distance * 100
-
-    if distance_cm <= 0:
-        return None
-
-    return distance_cm
-
-def one_step():
-    """
-    Tekee yhden step-pulssin A4988-ajurille.
-    """
-    step.on()
-    sleep(STEP_DELAY)
-    step.off()
-    sleep(STEP_DELAY)
-
 def move_steps(amount):
     """
-    Liikuttaa moottoria annetun määrän steppejä.
+    Liikuttaa moottoria eteenpäin annetun määrän steppejä.
+    Täsmälleen sama askellogiikka kuin kuvassasi.
     """
     for _ in range(amount):
-        one_step()
+        step.on()
+        sleep(STEP_DELAY)
+        step.off()
+        sleep(STEP_DELAY)
 
 def move_until_distance(stop_distance_cm):
     """
@@ -77,21 +59,18 @@ def move_until_distance(stop_distance_cm):
     on pienempi tai yhtä suuri kuin stop_distance_cm.
     """
     while True:
-        distance_cm = read_distance_cm()
-
-        if distance_cm is None:
-            print("Virheellinen sensorilukema")
-            sleep(SENSOR_DELAY)
-            continue
-
-        print(f"Etäisyys: {distance_cm:.1f} cm")
-
+        distance_cm = sensor.distance * 100
+        
+        # Pysäytetään, jos raja alittuu
         if distance_cm <= stop_distance_cm:
-            print("Raja saavutettu, pysäytetään")
+            print(f"Raja saavutettu ({distance_cm:.1f} cm), pysäytetään")
             break
 
-        one_step()
-        sleep(SENSOR_DELAY)
+        # Otetaan askel
+        step.on()
+        sleep(STEP_DELAY)
+        step.off()
+        sleep(STEP_DELAY)
 
 def run_motor_sequence(rounds, steps_per_round):
     """
