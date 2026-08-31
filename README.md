@@ -125,59 +125,7 @@ python3 -m pip install -r requirements.txt
 
 Depending on the Raspberry Pi OS version and GPIO configuration, additional system packages or GPIO backends may be required.
 
-## Recommended repository structure
 
-```text
-waste-sorter/
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
-├── src/
-│   └── waste_sorter.py
-│
-├── models/
-│   ├── README.md
-│   └── best_ncnn_model/        # add trained model here
-│
-├── tests/
-│   ├── hardware/
-│   │   ├── gpio_led_test.py
-│   │   ├── servo_hatch_test.py
-│   │   ├── stepper_direction_test.py
-│   │   ├── stepper_homing_test.py
-│   │   └── sorting_mechanism_test.py
-│   │
-│   └── vision/
-│       └── yolo_detection_test.py
-│
-├── docs/
-│   ├── waste_sorter_report.pdf
-│   ├── technical_plan.pdf
-│   └── source/
-│       └── project_report_source.docx
-│
-└── media/
-    ├── README.md
-    ├── robot_overview.jpg
-    ├── system_architecture.png
-    └── mechanical_iterations.jpg
-```
-
-### Suggested renaming of the current Python files
-
-| Current file | Suggested location / name | Purpose |
-|---|---|---|
-| `full_test.py` | `src/waste_sorter.py` | **Final integrated robot program** |
-| `moottori_testi (2).py` | `tests/hardware/sorting_mechanism_test.py` | Manual integrated stepper + servo + homing test |
-| `new.py` | `tests/hardware/stepper_gpio_test.py` | Early direct GPIO stepper pulse test |
-| `servo.py` | `tests/hardware/servo_hatch_test.py` | Servo open/close test |
-| `stepper_testi.py` | `tests/hardware/stepper_direction_test.py` | Stepper direction and movement test |
-| `stepper_testi2.py` | `tests/hardware/stepper_homing_test.py` | Stepper movement with ultrasonic return/homing |
-| `testi.py` | `tests/hardware/gpio_led_test.py` | Early GPIO/LED test |
-| `yolo_test2.py` | `tests/vision/yolo_detection_test.py` | YOLO camera and classification test |
-
-The development scripts are useful because they show how individual subsystems were tested before full integration. Keeping them under `tests/` or `experiments/` makes the repository easier to understand without mixing prototype scripts with the final application.
 
 ## Running the robot
 
@@ -228,16 +176,7 @@ Potential next development steps include:
 - evaluating precision, recall, confusion matrices, inference latency, and repeated-cycle reliability;
 - testing a general object detector combined with a separate waste-category mapping system, such as a deterministic database or language model.
 
-## Documentation
 
-The repository can include the project documentation under `docs/`:
-
-- `waste_sorter_report.pdf` – final project report
-- `technical_plan.pdf` – original technical plan
-- `source/project_report_source.docx` – editable project document supplied with the project files
-
-<!-- OPTIONAL VIDEO LINK
-[Watch the project demonstration video](ADD_VIDEO_URL_HERE)
 -->
 
 ## Authors
