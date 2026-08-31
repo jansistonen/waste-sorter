@@ -5,10 +5,9 @@
 
 A prototype robotic waste sorter that combines **computer vision, embedded control, and a custom linear sorting mechanism**. A Raspberry Pi 5 runs a fine-tuned YOLO object-detection model, maps the detected object to a waste category, moves a sorting basket to the corresponding bin position, releases the item through a servo-operated hatch, and returns the basket to its home position.
 
-<!-- IMAGE PLACEHOLDER
-Add a photo of the completed robot here, for example:
-![Completed waste-sorting robot](media/robot_overview.jpg)
--->
+
+![Completed waste-sorting robot](media/sorter.gif)
+
 
 ## Project overview
 
