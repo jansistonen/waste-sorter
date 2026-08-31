@@ -150,10 +150,10 @@ Press **`q`** in the OpenCV window to stop the program. `Ctrl+C` can also be use
 
 The mechanical subsystem required several design iterations. Early versions of the belt routing, idlers, motor mounts, and basket carriage showed problems such as belt misalignment, friction, and insufficient stiffness. The final arrangement used revised printed supports and a more controlled belt connection to the moving carriage.
 
-<!-- IMAGE PLACEHOLDER
-Add the mechanical iteration figure/photo collage here, for example:
+
+
 ![Mechanical design iterations](media/mechanical_iterations.jpg)
--->
+
 
 ## Results
 
