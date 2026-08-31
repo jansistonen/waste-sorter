@@ -1,7 +1,0 @@
-# Main application dependencies
-ultralytics
-opencv-python
-gpiozero
-
-# Raspberry Pi GPIO backend / compatibility layer used during development
-rpi-lgpio
